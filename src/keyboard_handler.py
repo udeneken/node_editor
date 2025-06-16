@@ -41,7 +41,7 @@ class KeyboardHandler:
                 if key == 'v' and app.modifiyers['Control']:
                     command += app.clipboard_get()
                 else:
-                    command = app.add_and_replace_key(command, event)
+                    command = self.add_and_replace_key(command, event)
                 app.set_command(command)
 
         elif app.mode == 'Normal':
@@ -171,7 +171,7 @@ class KeyboardHandler:
         elif app.mode == 'Insert':
 
             if len(app.selection) == 1 and type(app.selection[0]) is Node:
-                app.selection[0].text = app.add_and_replace_key(app.selection[0].text, event)
+                app.selection[0].text = self.add_and_replace_key(app.selection[0].text, event)
             app.redraw()
 
         elif app.mode == 'Connect':
