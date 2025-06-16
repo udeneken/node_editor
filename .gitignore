@@ -1,0 +1,4 @@
+# Directiories
+**/__pycache__/*
+.venv/*
+tmp/*
