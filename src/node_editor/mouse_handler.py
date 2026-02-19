@@ -1,4 +1,4 @@
-from object import Node
+from .object import Node
 
 class MouseHandler:
     def __init__(self, app):

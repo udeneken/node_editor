@@ -1,8 +1,8 @@
 from functools import partial
 from math import dist
 
-from object import Node, Edge
-from export import open_file
+from .object import Node, Edge
+from .export import open_file
 
 class KeyboardHandler:
     def __init__(self, app):

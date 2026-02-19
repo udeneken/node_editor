@@ -2,7 +2,7 @@ import tkinter as tk
 from math import dist
 from itertools import accumulate
 
-from utils import lerp
+from .utils import lerp
 
 class Text:
     def __init__(self, canvas, x, y, text):

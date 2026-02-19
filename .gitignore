@@ -1,4 +1,5 @@
 # Directiories
-**/__pycache__/*
+__pycache__/
 .venv/*
 tmp/*
+*.egg-info

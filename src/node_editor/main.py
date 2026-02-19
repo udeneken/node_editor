@@ -1,8 +1,8 @@
 import argparse
 import sys
-from os.path import dirname, join
+from os.path import abspath, dirname, join
 
-from app import App
+from .app import App
 
 def parse_input():
     parser = argparse.ArgumentParser(description='A node editor')
@@ -25,7 +25,7 @@ def parse_input():
     return args
 
 
-if __name__ == "__main__":
+def main():
     args = parse_input()
 
     file_name = args.filename
@@ -38,3 +38,7 @@ if __name__ == "__main__":
     app = App(file_name, width, height, root_dir)
 
     app.root.mainloop()
+
+
+if __name__ == "__main__":
+    main()

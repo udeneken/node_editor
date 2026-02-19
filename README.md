@@ -6,18 +6,14 @@ A node editor which creates beautiful diagrams very fast. With vim-like keyboard
 
 
 # Install
-Python version 3.10.12
-
-## Ubuntu / WSL
 ```sh
-sudo apt update
-sudo apt install python3.10 python3-tk
+uv sync
 ```
 
 # Run
 
 ```sh
-python3 src/main.py
+uv run node-editor
 ```
 
 # Controls

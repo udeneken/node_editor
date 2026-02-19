@@ -1,7 +1,7 @@
 import json
 import os.path
 
-from object import Node, Edge
+from .object import Node, Edge
 
 def parse_canvas(app):
     nodes = app.get_objs(Node)

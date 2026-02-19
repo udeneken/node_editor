@@ -5,14 +5,15 @@ from functools import partial
 from math import ceil, dist
 from subprocess import run
 from os.path import join, abspath, isfile
+from importlib.resources import files
 from collections import deque
 
 
-from object import Node, Edge, Group
-from export import import_mermaid, export_mermaid, save_canvas, open_file, export_svg
-from testing_funcs import simulate_keypress
-from mouse_handler import MouseHandler
-from keyboard_handler import KeyboardHandler
+from .object import Node, Edge, Group
+from .export import import_mermaid, export_mermaid, save_canvas, open_file, export_svg
+from .testing_funcs import simulate_keypress
+from .mouse_handler import MouseHandler
+from .keyboard_handler import KeyboardHandler
 
 class App:
     def __init__(self, file_name, width, height, root_dir):
@@ -26,8 +27,11 @@ class App:
         # add logo
         self.root_dir = root_dir
         print(root_dir)
-        icon_path = join(root_dir, 'images', 'logo.png')
-        photo = tk.PhotoImage(file=icon_path)
+        try:
+            icon_path = files("node_editor").joinpath("assets", "logo.png")
+        except Exception:
+            icon_path = join(root_dir, 'images', 'logo.png')
+        photo = tk.PhotoImage(file=str(icon_path))
         self.root.wm_iconphoto(False, photo)
 
 

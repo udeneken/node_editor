@@ -1,0 +1,15 @@
+[project]
+name = "node-editor"
+version = "0.1.0"
+description = "A node editor which creates beautiful diagrams very fast. With vim-like keyboard shortcuts"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.scripts]
+node-editor = "node_editor.main:main"
+
+[build-system]
+requires = ["uv_build>=0.7.0"]
+build-backend = "uv_build"
+
