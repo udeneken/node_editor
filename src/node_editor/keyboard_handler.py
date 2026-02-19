@@ -13,6 +13,10 @@ class KeyboardHandler:
     def handles_key_input(self, event):
         app = self.app
         key = event.keysym
+        print(key)
+        if key == 'question':
+            app.set_command('pressed ?')
+            return
         if key == 'Escape':
             app.change_mode('Normal')
             app.set_command('')
@@ -30,7 +34,7 @@ class KeyboardHandler:
             if key == 'Return':
                 # app.change_mode('Normal')
                 app.root.cmd_frame.lower()
-                app.run_command(command)
+                self.run_command(command)
                 return
             elif key == 'BackSpace' and len(command) == 1:
                 app.set_command('')
