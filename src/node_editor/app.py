@@ -284,8 +284,8 @@ class App:
 
 
     def draw_cursor(self):
-        self.root.canvas.create_line(self.cursor_x + 5, self.cursor_y, self.cursor_x - 5, self.cursor_y, width=3)
-        self.root.canvas.create_line(self.cursor_x, self.cursor_y + 5, self.cursor_x, self.cursor_y - 5, width=3)
+        self.root.canvas.create_line(self.cursor_x + 5, self.cursor_y, self.cursor_x - 5, self.cursor_y, width=3, fill='black')
+        self.root.canvas.create_line(self.cursor_x, self.cursor_y + 5, self.cursor_x, self.cursor_y - 5, width=3, fill='black')
 
 
     # Handleling objects
