@@ -49,7 +49,8 @@ class App:
             'Command': 'Enter command like :clean',
             'Visual': 'Select Objects',
             'Connect': 'Connect nodes with Edges',
-            'Move': 'Move different objects'
+            'Move': 'Move different objects',
+            'Help': 'Get help in the current mode',
             }
         self.mode = 'Normal'
         self.colors = {
@@ -484,6 +485,29 @@ class App:
                 self.set_status(f'{help_string}: {doc_string}')
             except:
                 self.set_status(f'{help_string}: not found')
+
+    def display_help(self, help_str):
+        lines = help_str.split('\n')
+        count_lines = len(lines)
+        max_lines = max([len(l) for l in lines])
+        w = max_lines * 8
+        h = count_lines * 20
+        x0 = self.canvas_width//2 - w // 2
+        x1 = self.canvas_width//2 + w // 2
+        y0 = self.canvas_height//2 - h // 2
+        y1 = self.canvas_height//2 + h // 2
+        self.root.canvas.create_rectangle(x0, y0, x1, y1, width=2, fill='gray', outline='black')
+        self.root.canvas.create_text((self.canvas_width//2, self.canvas_height//2), text=help_str, fill='black')
+        print("display help")
+
+    def reset(self):
+        self.change_mode('Normal')
+        self.set_status('Normal')
+        self.set_command('')
+        self.root.cmd_frame.lower()
+        print('Deselect all. ')
+        self.deselect()
+        self.redraw()
 
     def align(self, mode='vertically'):
         '''Takes the selection and alignes them.'''

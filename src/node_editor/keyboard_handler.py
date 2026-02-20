@@ -13,21 +13,11 @@ class KeyboardHandler:
     def handles_key_input(self, event):
         app = self.app
         key = event.keysym
-        print(key)
-        if key == 'question':
-            app.set_command('pressed ?')
-            return
         if key == 'Escape':
-            app.change_mode('Normal')
-            app.set_command('')
-            app.root.cmd_frame.lower()
-            print('Deselect all. ')
-            app.deselect()
-            app.redraw()
+            app.reset()
         elif key == 'colon' and app.mode != 'Command': # enter command mode
             app.root.cmd_frame.lift()
             app.change_mode('Command')
-
 
         elif app.mode == 'Command': # enter command
             command = app.get_command()
@@ -35,6 +25,9 @@ class KeyboardHandler:
                 # app.change_mode('Normal')
                 app.root.cmd_frame.lower()
                 self.run_command(command)
+                return
+            elif key == 'Escape':
+                app.reset()
                 return
             elif key == 'BackSpace' and len(command) == 1:
                 app.set_command('')
@@ -49,7 +42,12 @@ class KeyboardHandler:
                 app.set_command(command)
 
         elif app.mode == 'Normal':
-            if key == 'v':
+            if key == 'question':
+                app.change_mode('Help')
+                help_str = '\n'.join(f'({i}) {n:<10}: {exp}'for i, (n, exp) in enumerate(app.modes.items())) # explain modes
+                help_str += '\n Press <:> and enter "help" to get help with commands'
+                app.display_help(help_str)
+            elif key == 'v':
                 app.select_once = True
                 app.change_mode('Visual')
             elif key == 'V': # Enter visual mode
@@ -251,6 +249,16 @@ class KeyboardHandler:
                 app.select_once = False
                 if not app.modifiyers['Shift']:
                     app.change_mode('Normal')
+        
+        elif app.mode == 'Help':
+            if key in '0123456789':
+                mode = list(app.modes)[int(key)]
+                app.redraw()
+                if mode == 'Normal':
+                    app.display_help('This is help for normal. ')
+            else:
+                app.change_mode('Normal')
+        
         app.buffer.append(key)
         app.root.buffer_label.text = app.buffer
 
@@ -258,13 +266,13 @@ class KeyboardHandler:
         modifiyer = event.keysym[:-2]
         self.app.modifiyers[modifiyer] = True
         self.app.select_once = False
-        self.app.redraw()
+        # self.app.redraw()
         # if app.debug: print(f'{modifiyer} pressed')
 
     def modifiyer_released(self, event):
         modifiyer = event.keysym[:-2]
         self.app.modifiyers[modifiyer] = False
-        self.app.redraw()
+        # self.app.redraw()
         # if app.debug: print(f'{modifiyer} released')
 
     def add_and_replace_key(self, current_String, new_key_event):
