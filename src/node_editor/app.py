@@ -42,6 +42,13 @@ class App:
         self.window_height = self.canvas_height + 30
 
         self.root.geometry(f"{self.window_width}x{self.window_height}")
+        
+        # Try to bring window to foreground
+        self.root.update_idletasks()
+        self.root.lift()
+        self.root.focus_force()
+        self.root.attributes("-topmost", True)
+        self.root.after_idle(self.root.attributes, "-topmost", False)
 
         self.modes = {
             'Normal': 'Default mode',
