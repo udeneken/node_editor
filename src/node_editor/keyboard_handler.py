@@ -3,6 +3,7 @@ from math import dist
 
 from .object import Node, Edge
 from .export import open_file
+from .testing_funcs import test_stuff
 
 class KeyboardHandler:
     def __init__(self, app):
@@ -321,6 +322,9 @@ class KeyboardHandler:
             width, height = command.replace(':set canvas ', '').strip().split(' ')[:2]
             width, height = int(width), int(height)
             app.set_canvas_size(width, height)
+        elif command == ':test':
+            test_stuff(app)
+            app.change_mode('Normal')
         else:
             app.set_status(f'Command "{command}" does not exsit. ')
             print(f'Command "{command}" does not exsit. ')

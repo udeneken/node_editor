@@ -113,52 +113,6 @@ class App:
         if isfile(file_name):
             open_file(self, file_name)# To extract:
 
-        # test stuff
-        # nodeA = self.add_node(text='NodeA')
-        # self.set_cursor(300, 300)
-        # nodeB = self.add_node(text='NodeB')
-        # self.add_edge(nodeA, nodeB)
-
-#         mermaid = r'''flowchart TD
-# A --> B
-# B --> C'''
-#         import_mermaid(self, mermaid)
-#         print(export_mermaid(self))
-
-
-        # save_file(self, 'test.txt')
-
-        # open_file(self, 'tmp/test.txt')
-        # self.keyboard_handler.handles_key_input(simulate_keypress('c'))
-        # self.keyboard_handler.handles_key_input(simulate_keypress('a'))
-        # self.keyboard_handler.handles_key_input(simulate_keypress('c'))
-        # self.keyboard_handler.handles_key_input(simulate_keypress('Escape'))
-
-        # export_svg(self, 'tmp/test.svg')
-
-        # text = 'this is a test pPpbTXY\ntest'
-        # for i,t in enumerate(text):
-        #     self.root.canvas.create_text(i*8 + 100, 100, text=t)
-
-        # self.b = True
-        # self.brect = None
-        # def blink():
-        #     if self.b:
-        #         self.brect = self.root.canvas.create_rectangle(10,10, 20, 20, fill='black')
-        #         self.b = False
-        #     else:
-        #         self.root.canvas.delete(self.brect)
-        #         self.b = True
-        #     self.after(500, blink)
-
-        # blink()
-
-        # for i, t in enumerate(text.split('\n')):
-        #     draw_obj = self.root.canvas.create_text(100, 130 + 17*i, text=t, anchor='nw')
-        #     bg_text = self.root.canvas.create_rectangle(self.root.canvas.bbox(draw_obj), fill="white", outline='black', width=2)
-        #     self.root.canvas.tag_lower(bg_text, draw_obj) # draw box behind text
-
-        #     print(draw_obj)
 
     ## LAYOUT
 
