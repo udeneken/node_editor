@@ -144,7 +144,7 @@ class App:
         self.root.status_label = tk.Label(self.root.bottom_frame, text=f"{self.mode}", bg='grey', fg='white')
         self.root.status_label.pack(side=tk.LEFT, pady=0)
 
-        self.root.buffer_label = tk.Label(self.root.bottom_frame, text=''.join(self.buffer), bg='grey', fg='white')
+        self.root.buffer_label = tk.Label(self.root.bottom_frame, text='', bg='grey', fg='white')
         self.root.buffer_label.pack(side=tk.RIGHT, pady=0)
 
 
@@ -358,6 +358,9 @@ class App:
     def set_command(self, command):
         self.root.cmd_line.config(text=command)
 
+    def update_buffer(self):
+        self.root.buffer_label.config(text=''.join(self.buffer))
+
     def change_mode(self, mode):
         if mode in self.modes:
             if mode == 'Command':
@@ -475,9 +478,11 @@ class App:
         print("display help")
 
     def reset(self):
+        self.buffer = []
         self.change_mode('Normal')
         self.set_status('Normal')
         self.set_command('')
+        self.update_buffer()
         self.root.cmd_frame.lower()
         print('Deselect all. ')
         self.deselect()

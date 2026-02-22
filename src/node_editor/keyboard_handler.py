@@ -100,9 +100,9 @@ class KeyboardHandler:
                 app.undo()
             elif key == 'r':
                 app.redo()
-            elif key == 'm':
+            elif key == 'm': # enter move modej
                 app.change_mode('Move')
-            elif key.lower() in 'hjkl':
+            elif key.lower() in 'hjkl': # move curser
                 if len(app.selection) == 0:
                     dx, dy = app.grid_width, app.grid_height
                     if event.state:
@@ -143,6 +143,9 @@ class KeyboardHandler:
                                 break
 
                 app.redraw()
+            else:
+                app.buffer.append(key)
+                app.update_buffer()
 
         elif app.mode == 'Move':
             dx, dy = app.grid_width, app.grid_height
@@ -229,7 +232,6 @@ class KeyboardHandler:
                 app.redraw()
                 # app.change_mode('Normal')
 
-
             # move
             dx, dy = app.grid_width, app.grid_height
             if event.state:
@@ -272,8 +274,6 @@ class KeyboardHandler:
                 app.redraw()
                 app.display_help(f'{mode} Mode:\n' + self.app.controls_dict[mode])
         
-        app.buffer.append(key)
-        app.root.buffer_label.text = app.buffer
 
     def modifiyer_pressed(self, event):
         modifiyer = event.keysym[:-2]
