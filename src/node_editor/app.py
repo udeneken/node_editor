@@ -24,16 +24,29 @@ class App:
             self.file_name = file_name
             self.title(f"Node Editor: {file_name}")
 
-        # add logo
+        # load assets (logo, controls)
         self.root_dir = root_dir
         print(root_dir)
         try:
             icon_path = files("node_editor").joinpath("assets", "logo.png")
+            controls_path = files("node_editor").joinpath("assets", "Controls.md")
         except Exception:
             icon_path = join(root_dir, 'images', 'logo.png')
+            controls_path = join(root_dir, 'images', 'Controls.md')
+
+        # add logo
         photo = tk.PhotoImage(file=str(icon_path))
         self.root.wm_iconphoto(False, photo)
 
+        # load controls
+        self.controls_dict = {}
+        with open(controls_path, "r") as f:
+            controls_file_raw = f.read().split('##')[1:]
+            for line in controls_file_raw:
+                line = line.split('\n')
+                mode_name = line[0].strip().split(' ')[0]
+                description = '\n'.join([x for x in line[1:] if x.strip()])
+                self.controls_dict[mode_name] = description
 
         self.canvas_width = width
         self.canvas_height = height
@@ -51,13 +64,13 @@ class App:
         self.root.after_idle(self.root.attributes, "-topmost", False)
 
         self.modes = {
-            'Normal': 'Default mode',
-            'Insert': 'Insert text into nodes',
-            'Command': 'Enter command like :clean',
-            'Visual': 'Select Objects',
-            'Connect': 'Connect nodes with Edges',
-            'Move': 'Move different objects',
-            'Help': 'Get help in the current mode',
+            'Normal': {'description': 'Default mode', 'shortcut': '<ESC>'},
+            'Insert': {'description': 'Insert text into nodes', 'shortcut': 'i'},
+            'Command': {'description': 'Enter command like :clean', 'shortcut': '<\colon>'},
+            'Visual': {'description': 'Select Objects', 'shortcut': 'v'},
+            'Connect': {'description': 'Connect nodes with Edges', 'shortcut': 'c'},
+            'Move': {'description': 'Move different objects', 'shortcut': 'm'},
+            'Help': {'description': 'Get help in the current mode', 'shortcut': '<\question>'},
             }
         self.mode = 'Normal'
         self.colors = {
@@ -439,7 +452,7 @@ class App:
         if help_string == '':
             self.set_status(f'Try :help <command> or :help <Mode>')
         elif help_string in self.modes:
-            self.set_status(f'{help_string}: {self.modes[help_string]}')
+            self.set_status(f'{help_string}: {self.modes[help_string]["description"]}')
         elif hasattr(self, help_string):
             try:
                 doc_string = getattr(self, help_string).__doc__

@@ -45,9 +45,6 @@ class KeyboardHandler:
         elif app.mode == 'Normal':
             if key == 'question':
                 app.change_mode('Help')
-                help_str = '\n'.join(f'({i}) {n:<10}: {exp}'for i, (n, exp) in enumerate(app.modes.items())) # explain modes
-                help_str += '\n Press <:> and enter "help" to get help with commands'
-                app.display_help(help_str)
             elif key == 'v':
                 app.select_once = True
                 app.change_mode('Visual')
@@ -251,14 +248,29 @@ class KeyboardHandler:
                 if not app.modifiyers['Shift']:
                     app.change_mode('Normal')
         
-        elif app.mode == 'Help':
+        # check again if mode changed
+        if app.mode == 'Help':
+            # search mode to display help for
+            mode = None
+            if key == 'question':
+                mode = 'Help'
             if key in '0123456789':
                 mode = list(app.modes)[int(key)]
-                app.redraw()
-                if mode == 'Normal':
-                    app.display_help('This is help for normal. ')
             else:
-                app.change_mode('Normal')
+                for k,v in app.modes.items():
+                    if key.lower() == v['shortcut']:
+                        mode = k
+                        break
+
+            # display help
+            if mode == 'Help':
+                help_str = '\n'.join(f'({i}) {n:<10}: {exp}'for i, (n, exp) in enumerate(app.modes.items())) # explain modes
+                help_str += '\n Press <:> and enter "help" to get help with commands'
+                help_str += '\n Press <ESC> to exit help mode (and get into normal mode again)'
+                app.display_help(help_str)
+            elif mode is not None:
+                app.redraw()
+                app.display_help(f'{mode} Mode:\n' + self.app.controls_dict[mode])
         
         app.buffer.append(key)
         app.root.buffer_label.text = app.buffer
