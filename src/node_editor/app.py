@@ -351,15 +351,23 @@ class App:
     def get_command(self):
         '''Return text inside command_bar. '''
         return self.root.cmd_line.cget('text')
-
+    
+    def get_buffer(self):
+        '''Returns buffer as str. '''
+        return ''.join(self.buffer)
+    
     def set_status(self, status):
         self.root.status_label.config(text=status)
 
     def set_command(self, command):
         self.root.cmd_line.config(text=command)
 
-    def update_buffer(self):
-        self.root.buffer_label.config(text=''.join(self.buffer))
+    def update_buffer_label(self):
+        self.root.buffer_label.config(text=self.get_buffer())
+
+    def reset_buffer(self):
+        self.buffer = deque(list(self.buffer_size * ''), maxlen=self.buffer_size)
+        self.update_buffer_label()
 
     def change_mode(self, mode):
         if mode in self.modes:
@@ -478,11 +486,10 @@ class App:
         print("display help")
 
     def reset(self):
-        self.buffer = []
+        self.reset_buffer()
         self.change_mode('Normal')
         self.set_status('Normal')
         self.set_command('')
-        self.update_buffer()
         self.root.cmd_frame.lower()
         print('Deselect all. ')
         self.deselect()

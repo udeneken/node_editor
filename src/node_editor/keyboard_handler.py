@@ -14,6 +14,7 @@ class KeyboardHandler:
     def handles_key_input(self, event):
         app = self.app
         key = event.keysym
+        buffer = app.get_buffer()
         if key == 'Escape':
             app.reset()
         elif key == 'colon' and app.mode != 'Command': # enter command mode
@@ -67,9 +68,15 @@ class KeyboardHandler:
                     app.select_obj(new_node)
                     app.redraw()
                 app.change_mode('Insert')
-            elif key == 'c': # enter connect mode
-                app.change_mode('Connect')
-                app.redraw()
+            elif key == 'c': 
+                if buffer == 'g': # move cursor by command
+                    # move curser to center when pressing gc (goto center)
+                    app.set_cursor(app.canvas_width // 2, app.canvas_height // 2) 
+                    app.reset_buffer()
+                    app.redraw()
+                else:
+                    app.change_mode('Connect') # enter connect mode
+                    app.redraw()
             elif key == 'x': # delete selection otherwise delete node under cursor
                 if len(app.selection) == 0:
                     for node in app.get_objs(Node):
@@ -145,7 +152,7 @@ class KeyboardHandler:
                 app.redraw()
             else:
                 app.buffer.append(key)
-                app.update_buffer()
+                app.update_buffer_label()
 
         elif app.mode == 'Move':
             dx, dy = app.grid_width, app.grid_height
