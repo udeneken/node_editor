@@ -70,6 +70,7 @@ class App:
             'Visual': {'description': 'Select Objects', 'shortcut': 'v'},
             'Connect': {'description': 'Connect nodes with Edges', 'shortcut': 'c'},
             'Move': {'description': 'Move different objects', 'shortcut': 'm'},
+            'Goto': {'description': 'Move the cursor', 'shortcut': 'g'},
             'Help': {'description': 'Get help in the current mode', 'shortcut': '<\question>'},
             }
         self.mode = 'Normal'
@@ -422,11 +423,8 @@ class App:
         self.cursor_y = new_y
 
     def move_curser(self, new_rel_x, new_rel_y):
-        if 0 < self.cursor_x + new_rel_x < self.canvas_width:
-            self.cursor_x = self.cursor_x + new_rel_x
-
-        if 0 < self.cursor_y + new_rel_y < self.canvas_height:
-            self.cursor_y = self.cursor_y + new_rel_y
+        self.cursor_x = min(max(self.cursor_x + new_rel_x, 0), self.canvas_width)
+        self.cursor_y = min(max(self.cursor_y + new_rel_y, 0), self.canvas_height)
         # print(f'moving curser: {new_rel_x}, {new_rel_y}')
 
     def move_selection(self, new_rel_x, new_rel_y):

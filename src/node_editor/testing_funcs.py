@@ -19,7 +19,7 @@ def simulate_keypress(key):
 
 def test_stuff(app):
     # test stuff
-    
+    app.reset()
     nodeA = Node(app.root.canvas, app.cursor_x, app.cursor_y, text='NodeA')
     app.add_node(nodeA)
     app.set_cursor(300, 300)
@@ -27,6 +27,7 @@ def test_stuff(app):
     app.add_node(nodeB)
     edge = Edge(app.root.canvas, nodeA, nodeB)
     app.add_edge(edge)
+    app.redraw()
 
 #         mermaid = r'''flowchart TD
 # A --> B

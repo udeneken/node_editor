@@ -46,11 +46,17 @@ class KeyboardHandler:
         elif app.mode == 'Normal':
             if key == 'question':
                 app.change_mode('Help')
+            elif key == 'q':
+                print('Redraw')
+                app.redraw()
             elif key == 'v':
                 app.select_once = True
                 app.change_mode('Visual')
             elif key == 'V': # Enter visual mode
                 app.change_mode('Visual')
+            elif key == 'g':
+                app.change_mode('Goto')
+                return
             elif key == 'a': # create empty node at cursor
                 new_node = Node(app.root.canvas, app.cursor_x, app.cursor_y)
                 app.add_node(new_node)
@@ -69,14 +75,8 @@ class KeyboardHandler:
                     app.redraw()
                 app.change_mode('Insert')
             elif key == 'c': 
-                if buffer == 'g': # move cursor by command
-                    # move curser to center when pressing gc (goto center)
-                    app.set_cursor(app.canvas_width // 2, app.canvas_height // 2) 
-                    app.reset_buffer()
-                    app.redraw()
-                else:
-                    app.change_mode('Connect') # enter connect mode
-                    app.redraw()
+                app.change_mode('Connect') # enter connect mode
+                app.redraw()
             elif key == 'x': # delete selection otherwise delete node under cursor
                 if len(app.selection) == 0:
                     for node in app.get_objs(Node):
@@ -114,6 +114,13 @@ class KeyboardHandler:
                     dx, dy = app.grid_width, app.grid_height
                     if event.state:
                         dx, dy = 2 * dx, 2 * dy
+                    else:
+                        try:
+                            multiplier = float(app.get_buffer().replace('period', '.'))
+                            dx *= multiplier
+                            dy *= multiplier
+                        except:
+                            pass
 
                     move = app.move_curser
                     if len(app.selection) > 0:
@@ -256,6 +263,34 @@ class KeyboardHandler:
                 app.select_once = False
                 if not app.modifiyers['Shift']:
                     app.change_mode('Normal')
+        
+        if app.mode == 'Goto':
+            x, y = None, None
+            if key == 'g': # center
+                x, y = app.canvas_width // 2, app.canvas_height // 2
+            elif key == 'h': # left 
+                x, y = 0, app.canvas_height // 2
+            elif key == 'j': # down
+                x, y = app.canvas_width // 2, app.canvas_height
+            elif key == 'k': # top
+                x, y = app.canvas_width // 2, 0
+            elif key == 'l': # right
+                x, y = app.canvas_width, app.canvas_height // 2
+            elif key == 'f': # top left
+                x, y = 0, 0
+            elif key == 'F': # down right
+                x, y = app.canvas_width, app.canvas_height
+            elif key == 'd': # top right
+                x, y = app.canvas_width, 0
+            elif key == 'D': # down left
+                x, y = 0, app.canvas_height
+            
+            if x is not None and y is not None:
+                app.set_cursor(x, y) 
+                print(f"Move curser to ({x}, {y})")
+                app.redraw()
+            app.change_mode('Normal')
+
         
         # check again if mode changed
         if app.mode == 'Help':

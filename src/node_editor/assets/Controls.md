@@ -30,6 +30,20 @@ Press any letter apearing on the screen selects that object. While pressing shif
 
 **v**: Enter normal mode with selection
 
+## Goto mode
+
+Move the cursor to a specific point
+
+**g**: center
+**h**: left
+**j**: down
+**k**: top
+**l**: right
+**f**: top left
+**F**: down right
+**d**: top right
+**D**: down left
+
 ## Move mode
 
 Move nodes
