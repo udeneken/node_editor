@@ -2,7 +2,7 @@ from functools import partial
 from math import dist
 
 from .object import Node, Edge
-from .export import open_file
+from .export import open_file, export_mermaid
 from .testing_funcs import test_stuff
 
 class KeyboardHandler:
@@ -53,7 +53,7 @@ class KeyboardHandler:
                 return
             else:
                 if key == 'v' and app.modifiyers['Control']:
-                    command += app.clipboard_get()
+                    command += app.get_clipboard()
                 else:
                     command = self.add_and_replace_key(command, event)
                 app.set_command(command)
@@ -61,6 +61,12 @@ class KeyboardHandler:
         elif app.mode == 'Normal':
             if key == 'question':
                 app.change_mode('Help')
+            elif key == 'y':
+                mermaid_str = export_mermaid(app)
+                app.set_clipboard(mermaid_str)
+                if app.add_mermaid_template:
+                    mermaid_str = f'```mermaid\n{mermaid_str}```'
+                app.set_status('Mermaid copied to clipboard!')
             elif key == 'q':
                 print('Redraw')
                 app.redraw()

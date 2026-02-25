@@ -1,5 +1,6 @@
 import json
 import os.path
+from PIL import ImageGrab
 
 from .object import Node, Edge
 
@@ -130,3 +131,33 @@ def export_svg(app, file_name):
     svg_template =  f'<svg height="{app.root.canvas_height}" width="{app.root.canvas_width}" xmlns="http://www.w3.org/2000/svg">\n{svg_template}</svg>'
 
     save_file(svg_template, file_name)
+
+def get_screenshot(app):
+    root = app.root
+    x = root.winfo_rootx()
+    y = root.winfo_rooty()
+    w = app.canvas_width
+    h = app.canvas_height
+
+    # Force geometry + drawing update
+    root.update_idletasks()
+    root.update()
+
+
+    # disable cursor and command window
+    app.cursor_visible = False
+    app.set_command('')
+    app.root.cmd_frame.lower()
+    app.redraw()
+
+    img = ImageGrab.grab(bbox=(x, y, x + w, y + h))
+    
+    app.cursor_visible = True
+    app.redraw()
+
+    return img
+
+def export_image(app, file_name):
+    '''Save image in file path'''
+    img = get_screenshot(app)
+    img.save(file_name)

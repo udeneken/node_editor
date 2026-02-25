@@ -24,6 +24,8 @@ __TODO__: maybe add flowchart for program flow
 
 **u** / **r**: undo / redo (works for delete and add)
 
+**y**: yank mermaid code to clipboard. A template around the code can be added. 
+
 ## Visual mode
 
 Press any letter apearing on the screen selects that object. While pressing shift adds that object to selection
@@ -62,7 +64,7 @@ Press any letter apearing on the screen once to start an edge and the next lette
 
 **:o path/to/file**: open a file
 
-**:w**: save current file
+**:w**: save current file. (If extension is .png it is saved as an image)
 
 **:c** or **:clear**: clear canvas
 

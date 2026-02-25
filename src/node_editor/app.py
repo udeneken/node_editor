@@ -10,7 +10,7 @@ from collections import deque
 
 
 from .object import Node, Edge, Group
-from .export import import_mermaid, export_mermaid, save_canvas, open_file, export_svg
+from .export import import_mermaid, export_mermaid, save_canvas, open_file, export_svg, export_image
 from .testing_funcs import simulate_keypress
 from .mouse_handler import MouseHandler
 from .keyboard_handler import KeyboardHandler
@@ -100,6 +100,7 @@ class App:
         self.last_cursor_pos = [self.cursor_x, self.cursor_y]
         self.cursor_color = 'red'
         self.cursor_width = 3
+        self.cursor_visible = True
 
         self.grid_on = False
         self.grid_color = 'gray'
@@ -123,6 +124,9 @@ class App:
         self.undo_history = []
         self.redo_history = []
         self.undo_index = 0
+        
+        # import / export
+        self.add_mermaid_template = True
 
         # create layout / visuals
         self.create_layout()
@@ -265,8 +269,9 @@ class App:
 
 
     def draw_cursor(self):
-        self.root.canvas.create_line(self.cursor_x + 5, self.cursor_y, self.cursor_x - 5, self.cursor_y, width=3, fill='black')
-        self.root.canvas.create_line(self.cursor_x, self.cursor_y + 5, self.cursor_x, self.cursor_y - 5, width=3, fill='black')
+        if self.cursor_visible:
+            self.root.canvas.create_line(self.cursor_x + 5, self.cursor_y, self.cursor_x - 5, self.cursor_y, width=3, fill='black')
+            self.root.canvas.create_line(self.cursor_x, self.cursor_y + 5, self.cursor_x, self.cursor_y - 5, width=3, fill='black')
 
 
     # Handleling objects
@@ -370,11 +375,19 @@ class App:
         '''Returns buffer as str. '''
         return ''.join(self.buffer)
     
+    def get_clipboard(self):
+        return self.root.clipboard_get()
+    
     def set_status(self, status):
         self.root.status_label.config(text=status)
 
     def set_command(self, command):
         self.root.cmd_line.config(text=command)
+
+    def set_clipboard(self, clipboard_str):
+        self.root.clipboard_clear()
+        self.root.clipboard_append(clipboard_str)
+        self.root.update()  # Keeps it after window closes
 
     def update_buffer_label(self):
         self.root.buffer_label.config(text=self.get_buffer())
@@ -591,8 +604,13 @@ class App:
 
     def save(self, command):
         new_file = command.split(' ')[-1]
+        ext = new_file.split('.')[-1]
         if new_file != ':w':
-            save_canvas(self, new_file)
+            if ext == 'png':
+                export_image(self, new_file)
+                print(f'Image saved at {new_file}')
+            else:
+                save_canvas(self, new_file)
         elif self.file_name is None:
             self.set_status('No file_name given. Please use :w path/to/file.txt')
             print('File not given')
