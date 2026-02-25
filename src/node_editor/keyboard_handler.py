@@ -21,6 +21,21 @@ class KeyboardHandler:
             app.root.cmd_frame.lift()
             app.change_mode('Command')
 
+        elif app.mode == 'Goto':
+            pos_name = None
+            if key in app.goto_pos:
+                pos_name, x, y = app.goto_pos[key]
+            elif key == 'g':
+                pos_name = 'last'
+                print('jo')
+                x, y = app.last_cursor_pos
+
+            if pos_name is not None:
+                app.set_cursor(x, y) 
+                print(f"Move curser to {pos_name} ({x}, {y})")
+                app.redraw()
+            app.change_mode('Normal')
+
         elif app.mode == 'Command': # enter command
             command = app.get_command()
             if key == 'Return':
@@ -56,7 +71,6 @@ class KeyboardHandler:
                 app.change_mode('Visual')
             elif key == 'g':
                 app.change_mode('Goto')
-                return
             elif key == 'a': # create empty node at cursor
                 new_node = Node(app.root.canvas, app.cursor_x, app.cursor_y)
                 app.add_node(new_node)
@@ -207,6 +221,7 @@ class KeyboardHandler:
                         new_edge = Edge(app.root.canvas, app.connectNode, node)
                         app.add_edge(new_edge)
                         app.set_status(f'Connect: {app.connectLetter} --> {letter}')
+                        app.redraw()
 
                         #TODO: fix delete_obj increases undo counter
                         app.add_undoredo(
@@ -263,33 +278,6 @@ class KeyboardHandler:
                 app.select_once = False
                 if not app.modifiyers['Shift']:
                     app.change_mode('Normal')
-        
-        if app.mode == 'Goto':
-            x, y = None, None
-            if key == 'g': # center
-                x, y = app.canvas_width // 2, app.canvas_height // 2
-            elif key == 'h': # left 
-                x, y = 0, app.canvas_height // 2
-            elif key == 'j': # down
-                x, y = app.canvas_width // 2, app.canvas_height
-            elif key == 'k': # top
-                x, y = app.canvas_width // 2, 0
-            elif key == 'l': # right
-                x, y = app.canvas_width, app.canvas_height // 2
-            elif key == 'f': # top left
-                x, y = 0, 0
-            elif key == 'F': # down right
-                x, y = app.canvas_width, app.canvas_height
-            elif key == 'd': # top right
-                x, y = app.canvas_width, 0
-            elif key == 'D': # down left
-                x, y = 0, app.canvas_height
-            
-            if x is not None and y is not None:
-                app.set_cursor(x, y) 
-                print(f"Move curser to ({x}, {y})")
-                app.redraw()
-            app.change_mode('Normal')
 
         
         # check again if mode changed

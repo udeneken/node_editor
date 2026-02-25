@@ -79,12 +79,25 @@ class App:
             'Connect': 'blue',
         }
         self.debug_on = False
+        
+        self.goto_pos = {
+            's': ['center', self.canvas_width // 2, self.canvas_height // 2],
+            'h':['left', 0, self.canvas_height // 2],
+            'j':['down', self.canvas_width // 2, self.canvas_height],
+            'k': ['top', self.canvas_width // 2, 0],
+            'l':['right', self.canvas_width, self.canvas_height // 2],
+            'f': ['top left', 0, 0],
+            'F': ['down right', self.canvas_width, self.canvas_height],
+            'd': ['top right', self.canvas_width, 0],
+            'D': ['down left', 0, self.canvas_height],
+        }
 
         self.keyboard_handler = KeyboardHandler(app=self)
         self.buffer_size = 4
         self.buffer = deque(list(self.buffer_size * ''), maxlen=self.buffer_size)
 
         self.cursor_x, self.cursor_y = [50, 50]
+        self.last_cursor_pos = [self.cursor_x, self.cursor_y]
         self.cursor_color = 'red'
         self.cursor_width = 3
 
@@ -419,10 +432,12 @@ class App:
         self.redraw()
 
     def set_cursor(self, new_x, new_y):
+        self.last_cursor_pos = [self.cursor_x, self.cursor_y]
         self.cursor_x = new_x
         self.cursor_y = new_y
 
     def move_curser(self, new_rel_x, new_rel_y):
+        self.last_cursor_pos = [self.cursor_x, self.cursor_y]
         self.cursor_x = min(max(self.cursor_x + new_rel_x, 0), self.canvas_width)
         self.cursor_y = min(max(self.cursor_y + new_rel_y, 0), self.canvas_height)
         # print(f'moving curser: {new_rel_x}, {new_rel_y}')
