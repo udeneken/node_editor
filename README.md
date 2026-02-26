@@ -6,6 +6,7 @@ A node editor which creates beautiful diagrams very fast. With vim-like keyboard
 
 
 # Install
+Install project with [uv](https://docs.astral.sh/uv/getting-started/installation/)
 ```sh
 uv sync
 ```
@@ -15,5 +16,7 @@ uv sync
 ```sh
 uv run node-editor
 ```
+
+You can make an alias to run it `alias ne="uv run --project ~/Documents/code/node_editor node-editor"`
 
 See `src\node_editor\assets\Controls.md` to see how this works.
