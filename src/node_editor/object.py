@@ -15,12 +15,16 @@ class Text:
         self.canvas.create_text((self.x, self.y), text=self.text)
 
 class Node:
-    def __init__(self, canvas, x, y, width=200, height=50, text='', edges=None, outline_thickness=2, color_fill='white', color_outline='black', color_text='black'):
+    def __init__(self, canvas, x, y, width=200, height=50, text='', edges=None, outline_thickness=2, color_fill='white', color_outline='black', color_text='black', place_centered=False):
         self.canvas = canvas
         self.x = x
         self.y = y
         self.width = width
         self.height = height
+
+        if place_centered:
+            self.x = x - width // 2
+            self.y = y - height // 2
 
         self.outline_thickness = outline_thickness
         self.color_fill = color_fill

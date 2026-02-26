@@ -388,6 +388,12 @@ class App:
         self.root.clipboard_clear()
         self.root.clipboard_append(clipboard_str)
         self.root.update()  # Keeps it after window closes
+        
+    def set_grid(self, w, h):
+        self.grid_width = w
+        self.grid_height = h
+        self.redraw()
+        print(f'Setting grid to {w}x{h}')
 
     def update_buffer_label(self):
         self.root.buffer_label.config(text=self.get_buffer())

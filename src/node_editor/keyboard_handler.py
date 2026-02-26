@@ -27,7 +27,6 @@ class KeyboardHandler:
                 pos_name, x, y = app.goto_pos[key]
             elif key == 'g':
                 pos_name = 'last'
-                print('jo')
                 x, y = app.last_cursor_pos
 
             if pos_name is not None:
@@ -78,7 +77,7 @@ class KeyboardHandler:
             elif key == 'g':
                 app.change_mode('Goto')
             elif key == 'a': # create empty node at cursor
-                new_node = Node(app.root.canvas, app.cursor_x, app.cursor_y)
+                new_node = Node(app.root.canvas, app.cursor_x, app.cursor_y, place_centered=True)
                 app.add_node(new_node)
                 app.redraw()
             elif key == 'i': # create node at cursor and insert text
@@ -358,8 +357,23 @@ class KeyboardHandler:
             app.get_help(command)
         elif command == ':c' or command == ':clear':
             app.clean()
-        elif command == ':grid':
-            app.toggle_grid()
+        elif command.startswith(':grid'):
+            grid_str = command.split(" ")
+            if len(grid_str) == 1:
+                app.toggle_grid()
+                app.change_mode('Normal')
+                return
+            if len(grid_str) == 2:
+                w, h = grid_str[1], grid_str[1]
+            elif len(grid_str) == 3:
+                w, h = grid_str[1:]
+            else:
+                print('Wrong input do :grid, :grid S or :grid W H')
+                app.change_mode('Normal')
+                return
+            
+            app.set_grid(int(w), int(h))
+            app.change_mode('Normal')
         elif command == ':debug':
             app.toggle_debug()
         elif command == ':av':
