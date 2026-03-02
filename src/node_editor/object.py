@@ -40,9 +40,6 @@ class Node:
         else:
             self.edges = []
 
-
-        print(f'New Node: x = {x}, y = {y}, width = {width}, height = {height}')
-
     def get_point_inside(self, x, y):
         '''Check if a point is inside the node'''
         if self.x <= x <= self.x + self.width and self.y <= y <= self.y + self.height:
@@ -65,6 +62,20 @@ class Node:
 
     def get_rect(self, margin=0):
         return [self.x - margin, self.y - margin, self.x + self.width + margin, self.y + self.height + margin]
+    
+    def check_equal(self, node):
+        check_list = [
+            self.canvas == node.canvas,
+            self.x == node.x,
+            self.y == node.y,
+            self.width == node.width,
+            self.height == node.height,
+            self.outline_thickness == node.outline_thickness,
+            self.color_fill == node.color_fill,
+            self.color_outline == node.color_outline,
+            self.color_text == node.color_text,
+        ]
+        return all(check_list)
 
     def add_edge(self, edge):
         if edge not in self.edges:
@@ -148,7 +159,6 @@ class Edge:
         self.text_pos = self.get_coords(self.text_pos_t)
 
     def get_coords(self, t):
-        assert(0 <= t <= 1, 'Edge between 0 and 1. ')
         if t == 0:
             return self.points[0]
         elif t == 1:

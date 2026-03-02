@@ -1,5 +1,6 @@
 import json
 import os.path
+import string
 from PIL import ImageGrab
 
 from .object import Node, Edge
@@ -83,33 +84,49 @@ def import_mermaid(app, mermaid_string):
 
     nodes = []
     edges = []
+    node_text_dict = {}
     for line in mermaid_lines[1:]:
-        A, B = line.split('--')
-        A = A.replace('<', '').strip()
-        B = B.replace('>', '').strip()
-        if A not in nodes:
-            nodes.append(A)
-        if B not in nodes:
-            nodes.append(B)
-        if [A, B] not in edges:
-            edges.append([A,B])
+        if '-->' in line:
+            A, B = line.split('-->')
+            A = A.strip()
+            B = B.strip()
+            if A not in nodes:
+                nodes.append(A)
+            if B not in nodes:
+                nodes.append(B)
+            if [A, B] not in edges:
+                edges.append([A,B])
+        if '[' in line:
+            node_name, node_text = line.split('[')
+            node_name = node_name.strip()
+            node_text = node_text.replace(']', '').strip()
+            node_text_dict[node_name] = node_text
 
     node_objs = {}
     for i, node_name in enumerate(nodes):
-        new_node = Node(x=50, y=i*60 + 50, text=node_name)
-        node_objs[node_name] = app.add_node(new_node)
+        if node_name in node_text_dict:
+            node_text = node_text_dict[node_name]
+        new_node = Node(app.root.canvas, x=50, y=i*80 + 50, text=node_text)
+        node_objs[node_name] = new_node
+        app.add_node(new_node)
 
     for e in edges:
-        edge = Edge(node_objs[e[0]], node_objs[e[1]])
+        edge = Edge(app.root.canvas, node_objs[e[0]], node_objs[e[1]], "-->")
         app.add_edge(edge)
     return
 
 def export_mermaid(app):
     edges = app.get_objs(Edge)
+    node_dict = {node:letter for node, letter in zip(app.get_objs(Node), string.ascii_uppercase)}
 
     mermaid_string = 'flowchart TD\n'
+    # input list of node symbols with node text
+    for node, letter in node_dict.items():
+        mermaid_string += f'\t{letter}[{node.text}]\n'
+    mermaid_string += '\n'
+    # input edges
     for e in edges:
-        mermaid_string += f'    {e.nodeA.text} --> {e.nodeB.text}\n'
+        mermaid_string += f'\t{node_dict[e.nodeA]} --> {node_dict[e.nodeB]}\n'
 
     return mermaid_string
 

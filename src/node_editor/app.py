@@ -143,6 +143,10 @@ class App:
         # load file
         if isfile(file_name):
             open_file(self, file_name)# To extract:
+        
+        # test stuff on start
+        self.keyboard_handler.run_command(":test")
+        self.keyboard_handler.run_command(":mermaid")
 
 
     ## LAYOUT
@@ -260,7 +264,7 @@ class App:
         # debug stuff
         if self.debug_on:
             debug_texts = [
-                f'curser pos: {self.cursor_x}, {self.cursor_y}',
+                f'cursor pos: {self.cursor_x}, {self.cursor_y}',
                 f'num_objs = {len(self.all_objs)}',
                 f'undo_index = {self.undo_index}'
             ]
@@ -301,8 +305,12 @@ class App:
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing) # do this before closing window
 
     def add_node(self, new_node):
-        if new_node not in self.all_objs:
+        if not any([new_node.check_equal(n) for n in self.all_objs]):
             self.all_objs.append(new_node)
+            print(f'New Node: x = {new_node.x}, y = {new_node.y}, width = {new_node.width}, height = {new_node.height}')
+        else:
+            print('Node already exsits.')
+
 
     def add_edge(self, new_edge):
         if new_edge not in self.all_objs:
@@ -392,6 +400,7 @@ class App:
     def set_grid(self, w, h):
         self.grid_width = w
         self.grid_height = h
+        self.set_cursor(self.cursor_x, self.cursor_y, on_grid=True)
         self.redraw()
         print(f'Setting grid to {w}x{h}')
 
@@ -450,16 +459,20 @@ class App:
         self.change_mode('Normal')
         self.redraw()
 
-    def set_cursor(self, new_x, new_y):
+    def set_cursor(self, new_x, new_y, on_grid=True):
+        if on_grid:
+            new_x = round(new_x / self.grid_width) * self.grid_width
+            new_y = round(new_y / self.grid_height) * self.grid_height
         self.last_cursor_pos = [self.cursor_x, self.cursor_y]
         self.cursor_x = new_x
         self.cursor_y = new_y
 
-    def move_curser(self, new_rel_x, new_rel_y):
-        self.last_cursor_pos = [self.cursor_x, self.cursor_y]
+    def move_cursor(self, new_rel_x, new_rel_y):
+        if self.cursor_x != self.last_cursor_pos[0] and self.cursor_y != self.last_cursor_pos[1]:
+            self.last_cursor_pos = [self.cursor_x, self.cursor_y]
         self.cursor_x = min(max(self.cursor_x + new_rel_x, 0), self.canvas_width)
         self.cursor_y = min(max(self.cursor_y + new_rel_y, 0), self.canvas_height)
-        # print(f'moving curser: {new_rel_x}, {new_rel_y}')
+        # print(f'moving cursor: {new_rel_x}, {new_rel_y}')
 
     def move_selection(self, new_rel_x, new_rel_y):
         for sel in self.selection:

@@ -2,7 +2,7 @@ from functools import partial
 from math import dist
 
 from .object import Node, Edge
-from .export import open_file, export_mermaid
+from .export import open_file, export_mermaid, import_mermaid
 from .testing_funcs import test_stuff
 
 class KeyboardHandler:
@@ -31,7 +31,7 @@ class KeyboardHandler:
 
             if pos_name is not None:
                 app.set_cursor(x, y) 
-                print(f"Move curser to {pos_name} ({x}, {y})")
+                print(f"Move cursor to {pos_name} ({x}, {y})")
                 app.redraw()
             app.change_mode('Normal')
 
@@ -81,7 +81,7 @@ class KeyboardHandler:
                 app.add_node(new_node)
                 app.redraw()
             elif key == 'i': # create node at cursor and insert text
-                # check if node under curser
+                # check if node under cursor
                 for node in app.get_objs(Node):
                     if node.get_point_inside(app.cursor_x, app.cursor_y):
                         app.deselect()
@@ -128,7 +128,7 @@ class KeyboardHandler:
                 app.redo()
             elif key == 'm': # enter move modej
                 app.change_mode('Move')
-            elif key.lower() in 'hjkl': # move curser
+            elif key.lower() in 'hjkl': # move cursor
                 if len(app.selection) == 0:
                     dx, dy = app.grid_width, app.grid_height
                     if event.state:
@@ -141,18 +141,18 @@ class KeyboardHandler:
                         except:
                             pass
 
-                    move = app.move_curser
+                    move = app.move_cursor
                     if len(app.selection) > 0:
                         move = app.move_selection
 
                     if key.lower() == 'h':
-                        app.move_curser(-dx, 0)
+                        app.move_cursor(-dx, 0)
                     elif key.lower() == 'j':
-                        app.move_curser(0, dy)
+                        app.move_cursor(0, dy)
                     elif key.lower() == 'k':
-                        app.move_curser(0, -dy)
+                        app.move_cursor(0, -dy)
                     elif key.lower() == 'l':
-                        app.move_curser(dx, 0)
+                        app.move_cursor(dx, 0)
                 else:
                     if key.lower() == 'h':
                         nodes = sorted(app.get_objs(Node), key=lambda node: node.x)
@@ -182,14 +182,13 @@ class KeyboardHandler:
 
         elif app.mode == 'Move':
             dx, dy = app.grid_width, app.grid_height
+            move = app.move_cursor
             if event.state:
                 dx, dy = 2 * dx, 2 * dy
 
-            move = app.move_curser
             if app.modifiyers['Shift']:
                 dx, dy = 2 * dx, 2 * dy
 
-            move = app.move_curser
             if len(app.selection) > 0:
                 move = app.move_selection
 
@@ -355,6 +354,12 @@ class KeyboardHandler:
             app.change_mode('Normal')
         elif command.startswith(':help'):
             app.get_help(command)
+        elif command == ':mermaid':
+            mermaid_str = export_mermaid(app)
+            print(mermaid_str)
+            app.clean()
+            import_mermaid(app, mermaid_str)
+            app.change_mode('Normal')
         elif command == ':c' or command == ':clear':
             app.clean()
         elif command.startswith(':grid'):
